@@ -1,6 +1,6 @@
 import { Kafka, Partitioners } from "kafkajs";
 import { v4 as UUID } from "uuid";
-console.log('*** Consumer starts... ***');
+console.log('*** Producer starts... ***');
 
 const kafka = new Kafka({
   clientId: 'my-checking-client',
@@ -18,13 +18,18 @@ const run = async () => {
 run().catch(console.error);
 
 const idNumbers = [
-  '311299-999X',
-  '010703A999Y',
-  '240588+9999',
+  // Väärät
   'NNN588+9999',
   '112233-9999',
   '300233-9999',
-  '30233-9999'
+  '30233-9999',
+  '171232B9330',
+  // Oikeat
+  '010105A983E',
+  '171232A9330',
+  '180408A920K',
+  '190301A990V',
+  '050262+9449',
 ];
 
 function randomizeIntegerBetween(from, to) {
@@ -40,6 +45,7 @@ async function queueMessage() {
       {
         key: uuidFraction,
         value: Buffer.from(idNumbers[randomizeIntegerBetween(0, idNumbers.length - 1)]),
+        valid: Boolean,
       },
     ],
   });
