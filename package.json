@@ -1,0 +1,24 @@
+{
+  "name": "kafka-app-laurireis",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/laurireis/kafka-app-laurireis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/laurireis/kafka-app-laurireis/issues"
+  },
+  "homepage": "https://github.com/laurireis/kafka-app-laurireis#readme",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "uuid": "^9.0.0"
+  }
+}
