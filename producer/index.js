@@ -8,12 +8,25 @@ const kafka = new Kafka({
 });
 
 const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner });
+const consumer = kafka.consumer({ groupId: 'kafka-checker-servers2' });
+
 const run = async () => {
   await producer.connect();
+  await consumer.connect();
+  await consumer.subscribe({ topic: 'checkedresult' });
 
   setInterval(() => {
     queueMessage();
   }, 2500)
+
+  await consumer.run({
+    eachMessage: async ({ topic, partition, message }) => {
+      console.log({
+        value: message.value.toString()
+      })
+    }
+  })
+
 }
 run().catch(console.error);
 

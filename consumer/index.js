@@ -1,4 +1,4 @@
-import { Kafka } from "kafkajs";
+import { Kafka, Partitioners } from "kafkajs";
 console.log('*** Consumer starts... ***');
 
 const kafka = new Kafka({
@@ -6,6 +6,7 @@ const kafka = new Kafka({
   brokers: ['localhost:9092']
 });
 
+const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner });
 const consumer = kafka.consumer({ groupId: 'kafka-checker-servers1' });
 
 const ssnTester = (ssn) => {
@@ -50,9 +51,31 @@ const ssnTester = (ssn) => {
 const run = async () => {
   await consumer.connect();
   await consumer.subscribe({ topic: 'tobechecked', fromBeginning: true });
+  await producer.connect();
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
+
+      if (ssnTester(message.value.toString())) {
+        await producer.send({
+          topic: 'checkedresult',
+          messages: [
+            {
+              value: String('SSN is valid'),
+            }
+          ]
+        })
+      } else {
+        await producer.send({
+          topic: 'checkedresult',
+          messages: [
+            {
+              value: String('SSN is not valid'),
+            }
+          ]
+        })
+      }
+
       console.log({
         key: message.key.toString(),
         partition: message.partition,
